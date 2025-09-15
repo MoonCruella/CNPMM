@@ -1,0 +1,9 @@
+.cart-item-card .cart-item-row { display:flex !important; flex-direction:row !important; align-items:center; }
+.cart-item-card .cart-item-row > * { margin:0; }
+@media (max-width:520px){
+  .cart-item-card .cart-item-row { flex-wrap:wrap; row-gap:6px; }
+  .cart-item-card .cart-item-row .cart-item-name { flex:1 1 100%; }
+  .cart-item-card .cart-item-row .cart-item-qty { order:2; }
+  .cart-item-card .cart-item-row .cart-item-price { order:3; }
+  .cart-item-card .cart-item-row .cart-item-remove { order:4; }
+}
