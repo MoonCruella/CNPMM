@@ -1,108 +1,127 @@
-import axios from './axios.customize';
+import axios from "./axios.customize";
 
 // Auth APIs
 export const registerAPI = (userData) => {
-return axios.post('/auth/register', userData);
+  return axios.post("/auth/register", userData);
 };
 
 export const loginAPI = (credentials) => {
-return axios.post('/auth/login', credentials);
+  return axios.post("/auth/login", credentials);
 };
 
 export const logoutAPI = () => {
-return axios.post('/auth/logout');
+  return axios.post("/auth/logout");
 };
 
 export const getProfileAPI = () => {
-return axios.get('/auth/profile');
+  return axios.get("/auth/profile");
 };
 
 export const changePasswordAPI = (passwordData) => {
-return axios.put('/auth/change-password', passwordData);
+  return axios.put("/auth/change-password", passwordData);
 };
 
 export const refreshTokenAPI = (refreshToken) => {
-return axios.post('/auth/refresh-token', { refreshToken });
+  return axios.post("/auth/refresh-token", { refreshToken });
 };
 
 // User Management APIs
 export const getAllUsersAPI = (params = {}) => {
-const { page, limit } = params;
-let url = '/users';
+  const queryParams = new URLSearchParams();
 
-if (page || limit) {
-const queryParams = new URLSearchParams();
-if (page) queryParams.append('page', page);
-if (limit) queryParams.append('limit', limit);
-url += `?${queryParams.toString()}`;
-}
+  if (params.page !== undefined) queryParams.append("page", params.page);
+  if (params.limit !== undefined) queryParams.append("limit", params.limit);
 
-return axios.get(url);
+  const queryString = queryParams.toString();
+  const url = queryString ? `/public/users?${queryString}` : `/public/users`;
+
+  return axios.get(url);
 };
 
 export const getUserByIdAPI = (id) => {
-return axios.get(`/users/${id}`);
+  return axios.get(`/users/${id}`);
 };
 
 export const createUserAPI = (userData) => {
-return axios.post('/users', userData);
+  return axios.post("/users", userData);
 };
 
 export const updateUserAPI = (id, userData) => {
-return axios.put(`/users/${id}`, userData);
+  return axios.put(`/users/${id}`, userData);
 };
 
 export const deleteUserAPI = (id) => {
-return axios.delete(`/users/${id}`);
+  return axios.delete(`/users/${id}`);
+};
+
+// Admin APIs
+export const updateUserByAdminAPI = (id, userData) => {
+  // Sử dụng route thông thường nhưng với quyền admin
+  return axios.put(`/users/${id}`, userData);
+};
+
+export const toggleUserStatusAPI = (id, isActive) => {
+  return axios.put(`/users/${id}/status`, { isActive });
+};
+
+export const changeUserRoleAPI = (id, role) => {
+  return axios.put(`/users/${id}/role`, { role });
+};
+
+export const getAdminUsersAPI = (params = {}) => {
+  const { page, limit, role, isActive } = params;
+  const queryParams = new URLSearchParams();
+
+  if (page) queryParams.append("page", page);
+  if (limit) queryParams.append("limit", limit);
+  if (role) queryParams.append("role", role);
+  if (isActive !== undefined) queryParams.append("isActive", isActive);
+
+  return axios.get(`/users?${queryParams.toString()}`);
 };
 // Search & Filter APIs (từ user.routes.ts)
 export const searchUsersAPI = (searchParams = {}) => {
-    const queryParams = new URLSearchParams();
-    
-    Object.entries(searchParams).forEach(([key, value]) => {
-        if (value !== '' && value !== null && value !== undefined) {
-            queryParams.append(key, value);
-        }
-    });
-    
-    return axios.get(`/search?${queryParams.toString()}`);
+  const queryParams = new URLSearchParams();
+
+  Object.entries(searchParams).forEach(([key, value]) => {
+    if (value !== "" && value !== null && value !== undefined) {
+      queryParams.append(key, value);
+    }
+  });
+
+  return axios.get(`/search?${queryParams.toString()}`);
 };
 
-export const advancedSearchUsersAPI = (searchParams = {}) => {
-    const queryParams = new URLSearchParams();
-    
-    Object.entries(searchParams).forEach(([key, value]) => {
-        if (value !== '' && value !== null && value !== undefined) {
-            if (key === 'query' && typeof value === 'object') {
-                queryParams.append(key, JSON.stringify(value));
-            } else {
-                queryParams.append(key, value);
-            }
-        }
-    });
-    
-    return axios.get(`/advanced-search?${queryParams.toString()}`);
+export const fuzzySearchUsersAPI = (searchParams = {}) => {
+  const { q = "", page = 1, limit = 5 } = searchParams;
+
+  const queryParams = new URLSearchParams();
+  queryParams.append("q", q);
+  queryParams.append("page", page.toString());
+  queryParams.append("limit", limit.toString());
+
+  return axios.get(`/fuzzy-search?${queryParams.toString()}`);
 };
 
 export const getUserSuggestionsAPI = (field, query, limit = 5) => {
-    const queryParams = new URLSearchParams();
-    queryParams.append('field', field);
-    queryParams.append('query', query);
-    queryParams.append('limit', limit);
-    
-    return axios.get(`/suggestions?${queryParams.toString()}`);
+  const queryParams = new URLSearchParams();
+  queryParams.append("field", field);
+  queryParams.append("query", query);
+  queryParams.append("limit", limit);
+
+  return axios.get(`/suggestions?${queryParams.toString()}`);
 };
 
 export const filterUsersAPI = (filterType, params = {}) => {
-    const { page, limit } = params;
-    let url = `/filter/${filterType}`;
-    
-    if (page || limit) {
-        const queryParams = new URLSearchParams();
-        if (page) queryParams.append('page', page);
-        if (limit) queryParams.append('limit', limit);
-        url += `?${queryParams.toString()}`;
-    }
-    
-    return axios.get(url);
+  const { page, limit } = params;
+  let url = `/filter/${filterType}`;
+
+  if (page || limit) {
+    const queryParams = new URLSearchParams();
+    if (page) queryParams.append("page", page);
+    if (limit) queryParams.append("limit", limit);
+    url += `?${queryParams.toString()}`;
+  }
+
+  return axios.get(url);
 };

@@ -51,7 +51,7 @@ let getEditCRUD = async (req, res) => {
     // console.log(' ');
     // console.log(userData);
     // console.log('
-    return res.render("users/editUser.ejs", {
+    return res.render("users/updateUser.ejs", {
       data: userData,
     });
   } else {

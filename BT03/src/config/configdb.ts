@@ -1,10 +1,15 @@
 import { Sequelize } from "sequelize";
 
-const sequelize = new Sequelize("database_development", "root", "baynhet", {
-  host: "localhost",
-  dialect: "mysql",
-  logging: false,
-});
+const sequelize = new Sequelize(
+  "database_development",
+  "root",
+  "Munlatrang.04",
+  {
+    host: "localhost",
+    dialect: "mysql",
+    logging: false,
+  }
+);
 
 export const connectDB = async (): Promise<void> => {
   try {

@@ -1,7 +1,6 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
 import './index.css'
-import './App.css'
 
 import {
   createBrowserRouter,
@@ -25,7 +24,15 @@ const router = createBrowserRouter([
         element: <HomePage />
       },
       {
-        path: "user",
+        path: "/login",
+        element: <LoginPage />
+      },
+      {
+        path: "/register",
+        element: <RegisterPage />
+      },
+      {
+        path: "users",
         element: (
           <AuthWrapper>
             <UserPage />
@@ -34,20 +41,11 @@ const router = createBrowserRouter([
       },
     ]
   },
-  {
-    path: "/login",
-    element: <LoginPage />
-  },
-  {
-    path: "/register", 
-    element: <RegisterPage />
-  },
+
 ]);
 
 ReactDOM.createRoot(document.getElementById('root')).render(
-  <React.StrictMode>
     <AuthProvider>
       <RouterProvider router={router} />
     </AuthProvider>
-  </React.StrictMode>,
 )
